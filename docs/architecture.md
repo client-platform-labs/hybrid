@@ -6,7 +6,8 @@
 
 - Runtime: Node.js 24.x LTS + TypeScript.
 - CLI framework: `commander`.
-- Packaging: ESM-first npm packages with a `bin` entry.
+- Packaging: ESM-first npm packages under `@client-platform/*`, with Product `bin` entries plus family command `client-platform`.
+- Plugin metadata: `package.json#clientPlatform`.
 - Command loading: static core commands; heavy/optional paths via `import()`.
 - Config: human-authored JSONC, validated with JSON Schema 2020-12 via Ajv.
 - Documents carry `schemaVersion` and migrate before validation.
@@ -30,11 +31,13 @@ CLI  ->  bridge schema  ->  generated bindings  ->  shell adapters  ->  preview/
 
 ## Proposed package split
 
-- `hybrid` CLI package
-- `@.../hybrid-bridge`
-- `@.../hybrid-runtime-web`
-- `@.../adapter-*`
+- `@client-platform/hybrid` CLI package, bin `hybrid`
+- `@client-platform/hybrid-bridge`
+- `@client-platform/hybrid-runtime-web`
+- `@client-platform/adapter-*`
 - `examples/*`
+
+This Product is also loadable by the Umbrella CLI `client-platform` through `package.json#clientPlatform`.
 
 ## Inputs and outputs
 
