@@ -18,22 +18,26 @@ This repository is intended to cover:
 
 This repository should not absorb native business code or product-specific bridge logic.
 
-## Planned Shape
+## Local development
 
-The expected product shape is:
+Requires Node.js 24.x LTS. This package depends on a local `../kernel` checkout via `file:` during scaffolding.
 
-- a CLI for initialization, bridge generation, validation, and local workflows
-- shared contracts for bridge methods and events
-- presets/templates for common hybrid architectures
-- plugins or adapters for different shells and environments
-- examples showing end-to-end hybrid development flows
+```bash
+# from sibling kernel repo first:
+#   cd ../kernel && npm install && npm run build
+npm install
+npm run build
+node ./bin/hybrid.js --help
+```
 
-## Initial Milestones
+CLI surface: `init`, `generate-bridge`, `validate`, `preview`, `doctor`. Default preset: `webview-react-vite`.
 
-1. Define the bridge domain model and capability boundaries.
-2. Decide how CLI, contracts, templates, and adapters are separated.
-3. Design config and manifest conventions for hybrid targets.
-4. Create a minimal demo that validates bridge contracts locally.
+`init` writes minimal family config:
+
+- `client-platform.config.jsonc` with `products.hybrid`
+- `client-platform.manifest.jsonc` with webview target stubs
+
+`generate-bridge` and `preview` are stubs in this command-shell milestone.
 
 ## Documents
 
