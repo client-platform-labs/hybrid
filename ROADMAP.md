@@ -1,28 +1,23 @@
 # Roadmap
 
-This is the first delivery map for `hybrid`. Shared-kernel ownership is still an open family decision.
+Command-shell track for Client Platform Labs v1.
 
 ## Now
 
-- Keep the repository charter current.
-- Lock the domain language: shell, web runtime, bridge, capability, schema.
-- Define the bridge contract format and versioning rules.
-- Define the first CLI surface: `init`, `generate-bridge`, `validate`, `preview`, `doctor`.
+- CLI surface (locked, mostly stubbed): `init`, `generate-bridge`, `validate`, `preview`, `doctor`.
+- Default preset (locked): `webview-react-vite`.
+- `init` / `doctor` / `validate` should write and check family config; other commands may stub.
 
 ## Next
 
-- Ship a local MVP that generates typed bridge helpers from a contract and validates both sides against it.
-- Keep native-shell differences in adapters and templates.
-- Add one runnable example with a fake native shell so the web side can be developed without a device.
+- Bridge schema and typed generation.
+- Fake native shell for local web development.
 
 ## Later
 
-- Add real shell adapters and packaging flows.
-- Add capability discovery and environment assumption checks.
-- Align package layout with the family shared kernel once that boundary is decided.
+- Real shell adapters and packaging.
 
 ## Non-goals for v1
 
-- Absorbing native business apps into this repo.
-- Inventing a new WebView engine.
-- Treating RN delivery as a subset of hybrid; RN stays a sibling product.
+- Absorbing native business apps.
+- Treating RN delivery as a subset of hybrid.
