@@ -1,0 +1,59 @@
+# Architecture
+
+`hybrid` is the engineering toolkit for apps that pair a web runtime with a native shell. The bridge contract is the product, not a side effect.
+
+## Family constraints already decided
+
+- Runtime: Node.js 24.x LTS + TypeScript.
+- CLI framework: `commander`.
+- Packaging: ESM-first npm packages with a `bin` entry.
+- Command loading: static core commands; heavy/optional paths via `import()`.
+- Config: human-authored JSONC, validated with JSON Schema 2020-12 via Ajv.
+- Documents carry `schemaVersion` and migrate before validation.
+
+Exact family config filenames are not locked yet.
+
+## Product shape
+
+```text
+CLI  ->  bridge schema  ->  generated bindings  ->  shell adapters  ->  preview/packaging
+```
+
+- **CLI**: init, generate, validate, preview, doctor.
+- **Bridge schema**: methods, events, permissions, and compatibility ranges.
+- **Generated bindings**: typed web and native helpers from the same contract.
+- **Shell adapters**: iOS/Android/WebView/desktop differences.
+- **Templates**: starter hybrid apps.
+
+## Proposed package split
+
+- `hybrid` CLI package
+- `@.../hybrid-bridge`
+- `@.../hybrid-runtime-web`
+- `@.../adapter-*`
+- `examples/*`
+
+## Inputs and outputs
+
+| Flow | Input | Output |
+| --- | --- | --- |
+| `init` | target shell + web stack | project skeleton + bridge stub |
+| `generate-bridge` | bridge schema | typed bindings on both sides |
+| `validate` | schema + implementations | compatibility and capability report |
+| `preview` | web app + shell adapter | local hybrid loop |
+
+## What this repo should own
+
+- Bridge domain model and codegen.
+- Shell adapters and hybrid templates.
+- Capability/environment validation.
+- Local preview against a shell or shell mock.
+
+## What should probably live in a family kernel
+
+- CLI bootstrap and diagnostics.
+- Config/manifest load, migrate, validate.
+- Plugin registry and lazy loading.
+- Workspace/project discovery.
+
+That split is pending `shared kernel boundaries`.

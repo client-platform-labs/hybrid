@@ -35,6 +35,11 @@ The expected product shape is:
 3. Design config and manifest conventions for hybrid targets.
 4. Create a minimal demo that validates bridge contracts locally.
 
+## Documents
+
+- [Roadmap](./ROADMAP.md)
+- [Architecture](./docs/architecture.md)
+
 ## Working Principles
 
 - bridge contracts are first-class artifacts
