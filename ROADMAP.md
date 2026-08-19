@@ -3,22 +3,21 @@
 ## Now
 
 - CLI: `init`, `generate-bridge`, `validate`, `preview`, `doctor`
-- Default preset: `webview-react-vite`
-- Bridge schemas (locked): `hybrid/bridge/<kind>.<name>.json` (`method` / `event`)
-- `products.hybrid` (locked): `preset`, `bridgeSchemaDir`, `webEntry`
-- `generate-bridge` v1 (locked): Web TS types + `bridge.call` / `bridge.on`
-- `preview` v1 (locked): web + in-page fake native shell (postMessage mock)
+- Bridge schemas under `hybrid/bridge/method.*.json` / `event.*.json`
+- `generate-bridge` writes Web TS types + `bridge.call` / `bridge.on`
+- `preview` serves web + in-page fake native shell (`--write-only` available)
 
 ## Next
 
-- Implement schema stubs on `init`, real `generate-bridge`, placeholder `preview`.
+- Deeper schema validation (Ajv) for bridge files
+- Wire generated helpers into a Vite web entry by default
 
 ## Later
 
-- Real shell adapters and native bindings.
-- Packaging flows.
+- Native Swift/Kotlin bindings
+- Real device / WebView shells
 
 ## Non-goals for v1
 
-- Real device WebView packaging.
-- Treating RN as a hybrid subset.
+- Native codegen
+- Real device preview

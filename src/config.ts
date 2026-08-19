@@ -4,8 +4,9 @@ import { pathExists } from "./fs-utils.js";
 import { parseJsonc, stringifyJsonc } from "./jsonc.js";
 import {
   CONFIG_FILE_NAME,
+  DEFAULT_BRIDGE_SCHEMA_DIR,
   DEFAULT_PRESET,
-  DEFAULT_SHELL,
+  DEFAULT_WEB_ENTRY,
   MANIFEST_FILE_NAME,
   SCHEMA_VERSION,
   type HybridConfig,
@@ -49,6 +50,32 @@ async function writeJsoncFile(
   await writeFile(filePath, stringifyJsonc(value, header), "utf8");
 }
 
+export function defaultProductConfig(preset: string): HybridConfig {
+  return {
+    preset: preset || DEFAULT_PRESET,
+    bridgeSchemaDir: DEFAULT_BRIDGE_SCHEMA_DIR,
+    webEntry: DEFAULT_WEB_ENTRY,
+  };
+}
+
+export function normalizeProductConfig(value: unknown): HybridConfig | null {
+  if (!isRecord(value)) return null;
+  if (typeof value.preset !== "string" || !value.preset) return null;
+  const bridgeSchemaDir =
+    typeof value.bridgeSchemaDir === "string" && value.bridgeSchemaDir
+      ? value.bridgeSchemaDir
+      : DEFAULT_BRIDGE_SCHEMA_DIR;
+  const webEntry =
+    typeof value.webEntry === "string" && value.webEntry
+      ? value.webEntry
+      : DEFAULT_WEB_ENTRY;
+  return {
+    preset: value.preset,
+    bridgeSchemaDir,
+    webEntry,
+  };
+}
+
 export async function writeWorkspaceConfig(
   cwd: string,
   patch: HybridConfig,
@@ -63,9 +90,9 @@ export async function writeWorkspaceConfig(
     products: {
       ...existing.products,
       hybrid: {
-        ...(isRecord(existing.products?.hybrid) ? existing.products.hybrid : {}),
         preset: patch.preset,
-        shell: patch.shell ?? DEFAULT_SHELL,
+        bridgeSchemaDir: patch.bridgeSchemaDir,
+        webEntry: patch.webEntry,
       },
     },
   };
@@ -79,18 +106,16 @@ export async function writeWorkspaceConfig(
 
 export async function writeProjectManifest(
   cwd: string,
-  patch: Pick<ProjectManifestFile, "targets" | "tooling" | "entry">,
+  patch: Pick<ProjectManifestFile, "targets" | "tooling">,
 ): Promise<string> {
   const manifestPath = path.join(cwd, MANIFEST_FILE_NAME);
   const existing = (await pathExists(manifestPath))
     ? parseProjectManifest(await loadJsoncFile(manifestPath))
     : { schemaVersion: SCHEMA_VERSION };
   const next: ProjectManifestFile = {
-    ...existing,
     schemaVersion: existing.schemaVersion || SCHEMA_VERSION,
     targets: patch.targets ?? existing.targets,
     tooling: patch.tooling ?? existing.tooling,
-    entry: patch.entry ?? existing.entry,
   };
   await writeJsoncFile(
     manifestPath,
@@ -106,6 +131,7 @@ export type LoadedProject = {
   manifestPath: string;
   workspace: WorkspaceConfigFile;
   project: ProjectManifestFile;
+  product: HybridConfig | null;
 };
 
 export async function loadProject(cwd: string): Promise<LoadedProject> {
@@ -117,18 +143,13 @@ export async function loadProject(cwd: string): Promise<LoadedProject> {
   if (!(await pathExists(manifestPath))) {
     throw new Error(`missing ${MANIFEST_FILE_NAME}; run \`hybrid init\``);
   }
+  const workspace = parseWorkspaceConfig(await loadJsoncFile(configPath));
   return {
     cwd,
     configPath,
     manifestPath,
-    workspace: parseWorkspaceConfig(await loadJsoncFile(configPath)),
+    workspace,
     project: parseProjectManifest(await loadJsoncFile(manifestPath)),
-  };
-}
-
-export function defaultProductConfig(preset: string): HybridConfig {
-  return {
-    preset: preset || DEFAULT_PRESET,
-    shell: DEFAULT_SHELL,
+    product: normalizeProductConfig(workspace.products?.hybrid),
   };
 }

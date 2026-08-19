@@ -1,6 +1,8 @@
 import { createCli } from "@client-platform/kernel";
 import { runDoctor } from "./doctor.js";
+import { runGenerateBridge } from "./generate-bridge.js";
 import { runInit } from "./init.js";
+import { runPreview } from "./preview.js";
 import { DEFAULT_PRESET } from "./types.js";
 import { runValidate } from "./validate.js";
 
@@ -35,11 +37,17 @@ export async function run(argv: string[]): Promise<void> {
 
   program
     .command("generate-bridge")
-    .description("Generate typed bridge bindings from schema (stub)")
+    .description("Generate typed Web bridge helpers from schema")
     .action(async () => {
-      console.log(
-        "[hybrid] generate-bridge: stub — bridge schema codegen lands in a later milestone.",
-      );
+      try {
+        const written = await runGenerateBridge(process.cwd());
+        console.log(`[hybrid] generate-bridge ok — wrote ${written.length} file(s)`);
+        for (const file of written) {
+          console.log(`  + ${file}`);
+        }
+      } catch (err) {
+        fail(err);
+      }
     });
 
   program
@@ -50,6 +58,9 @@ export async function run(argv: string[]): Promise<void> {
         const result = await runValidate(process.cwd());
         for (const check of result.checks) {
           console.log(`ok: ${check}`);
+        }
+        for (const warning of result.warnings) {
+          console.warn(`warn: ${warning}`);
         }
         for (const error of result.errors) {
           console.error(`error: ${error}`);
@@ -65,11 +76,18 @@ export async function run(argv: string[]): Promise<void> {
 
   program
     .command("preview")
-    .description("Run local hybrid preview with fake shell (stub)")
-    .action(async () => {
-      console.log(
-        "[hybrid] preview: stub — fake native shell preview lands in a later milestone.",
-      );
+    .description("Run local hybrid preview with fake native shell")
+    .option("--port <n>", "port", "4174")
+    .option("--write-only", "write preview HTML and exit")
+    .action(async (opts: { port: string; writeOnly?: boolean }) => {
+      try {
+        await runPreview(process.cwd(), {
+          port: Number(opts.port) || 4174,
+          writeOnly: Boolean(opts.writeOnly),
+        });
+      } catch (err) {
+        fail(err);
+      }
     });
 
   program

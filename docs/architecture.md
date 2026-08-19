@@ -4,25 +4,20 @@
 
 ## Composition (locked)
 
-`products.hybrid` in Workspace Config:
+`products.hybrid`:
 
 - `preset` (default `webview-react-vite`)
 - `bridgeSchemaDir` (default `hybrid/bridge`)
 - `webEntry`
 
-Bridge schemas: `hybrid/bridge/method.*.json` and `hybrid/bridge/event.*.json`.
+Bridge schemas: `method.*.json` / `event.*.json` with `schemaVersion`, `kind`, `name`.
 
 ## CLI
 
 | Command | v1 |
 | --- | --- |
-| `init` | family files + bridge dir stubs |
-| `validate` | kernel + product segment (+ later schema scan) |
+| `init` | family files + sample bridge schemas |
+| `validate` | kernel + product + schema scan |
 | `generate-bridge` | Web TS helpers only |
-| `preview` | web + fake shell mock |
+| `preview` | web + fake shell postMessage mock |
 | `doctor` | kernel + product checks |
-
-## Non-goals for v1
-
-- Swift/Kotlin codegen
-- Real device shells
