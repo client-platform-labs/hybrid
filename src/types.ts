@@ -21,6 +21,6 @@ export type ProjectManifestFile = {
 
 export const CONFIG_FILE_NAME = "client-platform.config.jsonc";
 export const MANIFEST_FILE_NAME = "client-platform.manifest.jsonc";
-export const SCHEMA_VERSION = "0";
+export const SCHEMA_VERSION = "1";
 export const DEFAULT_PRESET = "webview-react-vite";
 export const DEFAULT_SHELL = "webview";
