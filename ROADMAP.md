@@ -1,23 +1,24 @@
 # Roadmap
 
-Command-shell track for Client Platform Labs v1.
-
 ## Now
 
-- CLI surface (locked, mostly stubbed): `init`, `generate-bridge`, `validate`, `preview`, `doctor`.
-- Default preset (locked): `webview-react-vite`.
-- `init` / `doctor` / `validate` should write and check family config; other commands may stub.
+- CLI: `init`, `generate-bridge`, `validate`, `preview`, `doctor`
+- Default preset: `webview-react-vite`
+- Bridge schemas (locked): `hybrid/bridge/<kind>.<name>.json` (`method` / `event`)
+- `products.hybrid` (locked): `preset`, `bridgeSchemaDir`, `webEntry`
+- `generate-bridge` v1 (locked): Web TS types + `bridge.call` / `bridge.on`
+- `preview` v1 (locked): web + in-page fake native shell (postMessage mock)
 
 ## Next
 
-- Bridge schema and typed generation.
-- Fake native shell for local web development.
+- Implement schema stubs on `init`, real `generate-bridge`, placeholder `preview`.
 
 ## Later
 
-- Real shell adapters and packaging.
+- Real shell adapters and native bindings.
+- Packaging flows.
 
 ## Non-goals for v1
 
-- Absorbing native business apps.
-- Treating RN delivery as a subset of hybrid.
+- Real device WebView packaging.
+- Treating RN as a hybrid subset.
